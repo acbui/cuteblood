@@ -10,7 +10,7 @@ public class Player : MonoBehaviour {
 		VISIBLE
 	}
 
-	int ID;
+	public int ID;
 	EGryll Gryll;
 	Tile CurrentTile;
 	State CurrentState;
@@ -55,13 +55,23 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	public Player(int id, EGryll gryll)
+	public void Initialize(int id, EGryll gryll)
 	{
 		ID = id;
 		Gryll = gryll;
 		CurrentState = State.INVISIBLE;
 		TimeSinceLastHug = 0;
 		TimeSinceLastMove = 0;
+	}
+
+	public EGryll GetGryll ()
+	{
+		return Gryll;
+	}
+
+	public int GetID()
+	{
+		return ID;
 	}
 
 	public void InputRead(EAction ActionInput)

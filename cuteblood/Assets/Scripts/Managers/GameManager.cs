@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour {
 	PlayerManager PlayerMgr;
 	InputManager InputMgr;
 
+	public GameObject Map;
+	public GameObject Players;
+
 	public EGameMode GameMode;
 
 	void OnEnable()
@@ -21,7 +24,9 @@ public class GameManager : MonoBehaviour {
 
 	void Start()
 	{
-
+		PlayerMgr.CreatePlayer (0, EGryll.ACB);
+		LevelMgr.SpawnRectangularGrid (8, 8);
+		LevelMgr.SpawnPlayers ();
 	}
 
 	public void EndGame (EGryll Winner)

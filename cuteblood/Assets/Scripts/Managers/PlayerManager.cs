@@ -9,9 +9,6 @@ public class PlayerManager : MonoBehaviour {
 	public Player Player1;
 	public Player Player2;
 
-	public GameObject PrefabACB;
-	public GameObject PrefabWINNIE;
-
 	void OnEnable()
 	{
 		ins = this;
@@ -21,22 +18,26 @@ public class PlayerManager : MonoBehaviour {
 	{
 		if (ID == 0)
 		{
-			Player1 = new Player(ID, SelectedGryll);
+			Player1 = gameObject.AddComponent<Player>();
+			Player1.Initialize (ID, SelectedGryll);
 			if (GameManager.ins.GameMode == EGameMode.SP)
 			{
 				if (SelectedGryll == EGryll.WINSTON)
 				{
-					Player2 = new Player(ID+1, EGryll.ACB);
+					Player2 = gameObject.AddComponent<Player>();
+					Player2.Initialize (ID+1, SelectedGryll);
                 }
 				else 
 				{
-					Player2 = new Player(ID+1, EGryll.WINSTON);
+					Player2 = gameObject.AddComponent<Player>();
+					Player2.Initialize (ID+1, EGryll.WINSTON);
 				}
 			}
 		}
 		else 
 		{
-			Player2 = new Player(ID, SelectedGryll);
+			Player2 = gameObject.AddComponent<Player>();
+			Player2.Initialize (ID, SelectedGryll);
 		}
 	}
 }
