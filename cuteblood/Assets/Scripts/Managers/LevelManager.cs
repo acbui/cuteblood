@@ -10,8 +10,7 @@ public class LevelManager : MonoBehaviour
 	Tile[,] CurrentMap;
 	int MapLength;
 	int MapHeight;
-
-
+	
 	public GameObject TilePrefab; 
 
 	public float TileOffset;
@@ -19,6 +18,9 @@ public class LevelManager : MonoBehaviour
 	void OnEnable()
 	{
 		ins = this;
+
+		SpriteRenderer renderer = TilePrefab.GetComponent<SpriteRenderer> ();
+		TileOffset = renderer.sprite.bounds.size.x;
 	}
 	
 	public void SpawnRectangularGrid(int Length, int Height)
@@ -54,7 +56,7 @@ public class LevelManager : MonoBehaviour
 
 				location = new Vector3 ( location.x + TileOffset, location.y, location.z );
 			}
-			location = new Vector3 ( location.x, location.y + TileOffset, location.z );
+			location = new Vector3 ( 0, location.y - TileOffset, location.z );
 		}
 	}
 }
