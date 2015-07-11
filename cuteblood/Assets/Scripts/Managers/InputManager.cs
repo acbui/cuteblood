@@ -54,6 +54,8 @@ public class InputManager : MonoBehaviour {
 		}
 	}
 
+	public static InputManager ins;
+
 	PlayerInputs PlayerOneInputs;
 	PlayerInputs PlayerTwoInputs;
 
@@ -63,6 +65,12 @@ public class InputManager : MonoBehaviour {
 
 	// CONTROLLERS
 
+	
+	void OnEnable()
+	{
+		ins = this;
+	}
+	
 	public void SetKeys(bool bPlayerOne, bool bUseController)
 	{
 		if (bPlayerOne) {

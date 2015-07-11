@@ -16,20 +16,11 @@ public class LevelManager : MonoBehaviour
 
 	public float TileOffset;
 
-
-
-	// Use this for initialization
-	void Start ()
+	void OnEnable()
 	{
-	
+		ins = this;
 	}
 	
-	// Update is called once per frame
-	void Update ()
-	{
-	
-	}
-
 	public void SpawnRectangularGrid(int Length, int Height)
 	{
 		Vector3 location = Vector3.zero;
@@ -39,6 +30,7 @@ public class LevelManager : MonoBehaviour
 			for (int column = 0; column < Length; column++)
 			{
 				GameObject newTile = Instantiate(TilePrefab, location, Quaternion.identity) as GameObject;
+				newTile.name = "" + row + "x" + column;
 				Tile tileComponent = newTile.GetComponent<Tile>();
 
 				if (tileComponent != null)

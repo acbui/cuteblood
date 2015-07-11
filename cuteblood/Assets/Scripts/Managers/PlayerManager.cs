@@ -9,6 +9,11 @@ public class PlayerManager : MonoBehaviour {
 	public Player Player1;
 	public Player Player2;
 
+	void OnEnable()
+	{
+		ins = this;
+	}
+
 	public void CreatePlayer (int ID, EGryll SelectedGryll)
 	{
 		if (ID == 0)
