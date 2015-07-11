@@ -59,5 +59,20 @@ public class LevelManager : MonoBehaviour
 			location = new Vector3 ( 0, location.y - TileOffset, location.z );
 		}
 	}
+
+	public void RandomlyPlacePlayers()
+	{
+		int[] p1tile = new int[] { Random.Range (0, MapLength), Random.Range (0, MapHeight) };
+		int[] p2tile = new int[] { Random.Range (0, MapLength), Random.Range (0, MapHeight) };
+
+		Vector3 p1start = new Vector3 (p1tile[0], p1tile[1], 0);
+		while (p1tile == p2tile)
+		{
+			p2tile = new int[] { Random.Range (0, MapLength), Random.Range (0, MapHeight) };
+		}
+		Vector3 p2start = new Vector3 (p2tile [0], p2tile [1], 0);
+
+
+	}
 }
 

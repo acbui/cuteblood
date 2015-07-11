@@ -9,6 +9,9 @@ public class PlayerManager : MonoBehaviour {
 	public Player Player1;
 	public Player Player2;
 
+	public GameObject PrefabACB;
+	public GameObject PrefabWINNIE;
+
 	void OnEnable()
 	{
 		ins = this;
