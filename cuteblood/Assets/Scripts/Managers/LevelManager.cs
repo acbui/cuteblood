@@ -175,6 +175,7 @@ public class LevelManager : MonoBehaviour
 	void RotatePlayerView(ERotation Rot, GameObject Player, Tile[,] PlayerMap)
 	{
 		Player.transform.Rotate (0, 0, (int)Rot * 90);
+		Player.GetComponentInChildren<Animator> ().gameObject.transform.Rotate (0, 180, 0);
 
 		for (int i = 0; i < MapHeight; i++)
 		{

@@ -27,7 +27,7 @@ public class Player : MonoBehaviour {
 	public float MoveStartTime;
 	public float MoveDistance;
 
-	float TimeSinceLastHug;
+	public float TimeSinceLastHug;
 	public float TimeSinceLastMove;
 
 	void Update()
@@ -98,6 +98,7 @@ public class Player : MonoBehaviour {
 		}
 		else if (ActionInput == EAction.HUG)
 		{
+			print ("HUG");
 			TryHug ();
 		}
 		else 
@@ -114,9 +115,10 @@ public class Player : MonoBehaviour {
 		}
 		if (TimeSinceLastHug > HugDelay)
 		{
+			print ("TRY HUG");
 			bHasHugged = true;
+			gameObject.GetComponentInChildren<Animator>().SetBool ("bHug", true);
 			TimeSinceLastHug = 0;
-
 			if (CurrentTile.IsHuggable())
 			{
 				GameManager.ins.EndGame(Gryll);
@@ -128,7 +130,6 @@ public class Player : MonoBehaviour {
 	{
 		if (TimeSinceLastMove > MoveDelay)
 		{
-			print ("here");
 			bHasMoved = true;
 			TimeSinceLastMove = 0;
 
