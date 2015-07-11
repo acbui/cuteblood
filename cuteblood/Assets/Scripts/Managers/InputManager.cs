@@ -69,6 +69,13 @@ public class InputManager : MonoBehaviour {
 	void OnEnable()
 	{
 		ins = this;
+		SetKeys (true, false);
+		SetKeys (false, false);
+	}
+
+	void Update()
+	{
+		ReadGameInput ();
 	}
 	
 	public void SetKeys(bool bPlayerOne, bool bUseController)

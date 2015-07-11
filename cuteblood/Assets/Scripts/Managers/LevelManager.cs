@@ -69,39 +69,33 @@ public class LevelManager : MonoBehaviour
 
 	public void SpawnPlayers()
 	{
-		int[] p1tile = new int[] { Random.Range (0, MapLength), Random.Range (0, MapHeight) };
-		int[] p2tile = new int[] { Random.Range (0, MapLength), Random.Range (0, MapHeight) };
+		Tile p1tile = CurrentMap [ Random.Range (0, MapLength), Random.Range (0, MapHeight) ];
+		Tile p2tile = CurrentMap [ Random.Range (0, MapLength), Random.Range (0, MapHeight) ];
 
-		Vector3 p1start = CurrentMap [p1tile [0], p1tile [1]].transform.position;
+		Vector3 p1position = p1tile.transform.position;
 		while (p1tile == p2tile)
 		{
-			p2tile = new int[] { Random.Range (0, MapLength), Random.Range (0, MapHeight) };
+			p2tile = CurrentMap [ Random.Range (0, MapLength), Random.Range (0, MapHeight) ];
 		}
-		Vector3 p2start = CurrentMap [p2tile [0], p2tile [1]].transform.position;
+		Vector3 p2position = p2tile.transform.position;
+
+		PlayerManager.ins.Player1.SetTile (p1tile);
+		PlayerManager.ins.Player2.SetTile (p2tile);
 
 		EGryll p1gryll = PlayerManager.ins.Player1.GetGryll ();
 		EGryll p2gryll = PlayerManager.ins.Player2.GetGryll ();
 
-		GameObject p1 = Instantiate (PlayerPrefabs[(int) p1gryll], p1start, Quaternion.identity) as GameObject;
-		Player p1component = p1.GetComponent<Player>();
-		p1component.Initialize(PlayerManager.ins.Player1.GetID(), PlayerManager.ins.Player1.GetGryll());
-		PlayerManager.ins.Player1 = p1component;
-		p1.transform.parent = GameManager.ins.Players.transform;
+		PlayerManager.ins.P1.transform.position = p1position;
+		GameObject p1 = Instantiate (PlayerPrefabs[(int) p1gryll], p1position, Quaternion.identity) as GameObject;
+		p1.transform.parent = PlayerManager.ins.P1.transform;
 		p1.name = "Player1";
-		SpawnCamera (p1);
+		SpawnCamera (PlayerManager.ins.P1);
 
-		GameObject p2 = Instantiate (PlayerPrefabs[(int) p2gryll], p2start, Quaternion.identity) as GameObject;
-		Player p2component = p2.GetComponent<Player>();
-		p2component.Initialize(PlayerManager.ins.Player2.GetID(), PlayerManager.ins.Player2.GetGryll());
-		PlayerManager.ins.Player2 = p2component;
-		p2.transform.parent = GameManager.ins.Players.transform;
+		PlayerManager.ins.P2.transform.position = p2position;
+		GameObject p2 = Instantiate (PlayerPrefabs[(int) p2gryll], p2position, Quaternion.identity) as GameObject;
+		p2.transform.parent = PlayerManager.ins.P2.transform;
 		p2.name = "Player2";
-		SpawnCamera (p2);
-
-		foreach (Player playerScript in gameObject.GetComponents<Player>())
-		{
-			Destroy (playerScript);
-		}
+		SpawnCamera (PlayerManager.ins.P2);
 	}
 
 	void SpawnCamera (GameObject player)
@@ -116,7 +110,7 @@ public class LevelManager : MonoBehaviour
 		if (player.GetComponent<Player>().GetID () == 0)
 		{
 			CamObj.name = "Player1 Camera";
-			cam.rect = new Rect (0,0,0.5f,1);
+			cam.rect = new Rect (0,0,0.495f,1);
 		}
 		else 
 		{

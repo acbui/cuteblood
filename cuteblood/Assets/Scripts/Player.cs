@@ -12,7 +12,7 @@ public class Player : MonoBehaviour {
 
 	public int ID;
 	EGryll Gryll;
-	Tile CurrentTile;
+	public Tile CurrentTile;
 	State CurrentState;
 
 	bool bHasMoved;
@@ -62,6 +62,11 @@ public class Player : MonoBehaviour {
 		CurrentState = State.INVISIBLE;
 		TimeSinceLastHug = 0;
 		TimeSinceLastMove = 0;
+	}
+
+	public void SetTile(Tile tile)
+	{
+		CurrentTile = tile;
 	}
 
 	public EGryll GetGryll ()
