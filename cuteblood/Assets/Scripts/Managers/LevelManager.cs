@@ -7,7 +7,11 @@ public class LevelManager : MonoBehaviour
 	public static LevelManager ins;
 
 	// current map can only be rectangular anyway
-	Tile[,] CurrentMap;
+	public GameObject P1Map;
+	public GameObject P2Map;
+	Tile[,] Player1Map;
+	Tile[,] Player2Map;
+
 	int MapLength;
 	int MapHeight;
 	
@@ -27,18 +31,23 @@ public class LevelManager : MonoBehaviour
 	
 	public void SpawnRectangularGrid(int Length, int Height)
 	{
-		Vector3 location = Vector3.zero;
-		CurrentMap = new Tile[Height,Length];
 		MapLength = Length;
 		MapHeight = Height;
+
+		Vector3 p1location = Vector3.zero;
+		Player1Map = new Tile[Height, Length];
+
+		Vector3 p2location = new Vector3 (p1location.x + TileOffset * (Length + 5), 0, 0);
+		Vector3 initP2location = p2location;
+		Player2Map = new Tile[Height, Length];
 
 		for (int row = 0; row < Height; row++)
 		{
 			for (int column = 0; column < Length; column++)
 			{
-				GameObject newTile = Instantiate(TilePrefab, location, Quaternion.identity) as GameObject;
-				newTile.transform.parent = GameManager.ins.Map.transform;
-				newTile.name = "" + row + "x" + column;
+				GameObject newTile = Instantiate(TilePrefab, p1location, Quaternion.identity) as GameObject;
+				newTile.transform.parent = P1Map.transform;
+				newTile.name = "P1 " + row + "x" + column;
 
 				Tile tileComponent = newTile.GetComponent<Tile>();
 
@@ -48,35 +57,66 @@ public class LevelManager : MonoBehaviour
 					
 					if (row > 0)
 					{
-						tileComponent.SetNeighbour (CurrentMap[row-1,column], EDirection.UP);
-						CurrentMap[row-1,column].SetNeighbour (tileComponent, EDirection.DOWN);
-
+						tileComponent.SetNeighbour (Player1Map[row-1,column], EDirection.UP);
+						Player1Map[row-1,column].SetNeighbour (tileComponent, EDirection.DOWN);
+						
 					}
 					if (column > 0)
 					{
-						tileComponent.SetNeighbour (CurrentMap[row,column-1], EDirection.LEFT);
-						CurrentMap[row,column-1].SetNeighbour(tileComponent, EDirection.RIGHT);
+						tileComponent.SetNeighbour (Player1Map[row,column-1], EDirection.LEFT);
+						Player1Map[row,column-1].SetNeighbour(tileComponent, EDirection.RIGHT);
 					}
-
-					CurrentMap[row,column] = tileComponent;
+					
+					Player1Map[row,column] = tileComponent;
 				}
 
-				location = new Vector3 ( location.x + TileOffset, location.y, location.z );
+				GameObject newTile2 = Instantiate(TilePrefab, p2location, Quaternion.identity) as GameObject;
+				newTile2.transform.parent = P2Map.transform;
+				newTile2.name = "P2 " + row + "x" + column;
+				
+				Tile tileComponent2 = newTile2.GetComponent<Tile>();
+				
+				if (tileComponent2 != null)
+				{
+					tileComponent2.Initialize();
+					
+					if (row > 0)
+					{
+						tileComponent2.SetNeighbour (Player2Map[row-1,column], EDirection.UP);
+						Player2Map[row-1,column].SetNeighbour (tileComponent2, EDirection.DOWN);
+						
+					}
+					if (column > 0)
+					{
+						tileComponent2.SetNeighbour (Player2Map[row,column-1], EDirection.LEFT);
+						Player2Map[row,column-1].SetNeighbour(tileComponent2, EDirection.RIGHT);
+					}
+					
+					Player2Map[row,column] = tileComponent2;
+				}
+				
+				p1location = new Vector3 ( p1location.x + TileOffset, p1location.y, p1location.z );
+				p2location = new Vector3 ( p2location.x + TileOffset, p2location.y, p2location.z );
 			}
-			location = new Vector3 ( 0, location.y - TileOffset, location.z );
+			p1location = new Vector3 ( 0, p1location.y - TileOffset, p1location.z );
+			p2location = new Vector3 ( initP2location.x , p2location.y - TileOffset, p2location.z );
 		}
 	}
 
 	public void SpawnPlayers()
 	{
-		Tile p1tile = CurrentMap [ Random.Range (0, MapLength), Random.Range (0, MapHeight) ];
-		Tile p2tile = CurrentMap [ Random.Range (0, MapLength), Random.Range (0, MapHeight) ];
+		int[] p1start = new int[] { Random.Range (0, MapLength), Random.Range (0, MapHeight) };
+		int[] p2start = new int[] { Random.Range (0, MapLength), Random.Range (0, MapHeight) };
+
+		Tile p1tile = Player1Map [ p1start[0], p1start[1] ];
+
 
 		Vector3 p1position = p1tile.transform.position;
-		while (p1tile == p2tile)
+		while (p1start == p2start)
 		{
-			p2tile = CurrentMap [ Random.Range (0, MapLength), Random.Range (0, MapHeight) ];
+			p2start = new int[] { Random.Range (0, MapLength), Random.Range (0, MapHeight) };
 		}
+		Tile p2tile = Player2Map [ p2start[0], p2start[1] ];
 		Vector3 p2position = p2tile.transform.position;
 
 		PlayerManager.ins.Player1.SetTile (p1tile);
