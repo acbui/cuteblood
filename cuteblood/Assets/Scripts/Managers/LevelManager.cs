@@ -11,9 +11,8 @@ public class LevelManager : MonoBehaviour
 	public GameObject P2Map;
 	Tile[,] Player1Map;
 	Tile[,] Player2Map;
-
-	ERotation P1Rotation;
-	ERotation P2Rotation;
+	
+	public ERotation[] PlayerRotations;
 
 	int MapLength;
 	int MapHeight;
@@ -31,8 +30,9 @@ public class LevelManager : MonoBehaviour
 		SpriteRenderer renderer = TilePrefab.GetComponent<SpriteRenderer> ();
 		TileOffset = renderer.sprite.bounds.size.x;
 
-		P1Rotation = GetRandomRotation ();
-		P2Rotation = GetRandomRotation ();
+		PlayerRotations = new ERotation[2];
+		PlayerRotations[0] = GetRandomRotation ();
+		PlayerRotations[1] = GetRandomRotation ();
 	}
 	
 	public void SpawnRectangularGrid(int Length, int Height)
@@ -125,8 +125,8 @@ public class LevelManager : MonoBehaviour
 		Tile p2tile = Player2Map [ p2start[0], p2start[1] ];
 		Vector3 p2position = p2tile.transform.position;
 
-		PlayerManager.ins.Player1.SetTile (p1tile);
-		PlayerManager.ins.Player2.SetTile (p2tile);
+		PlayerManager.ins.Player1.SetInitialTile (p1tile);
+		PlayerManager.ins.Player2.SetInitialTile (p2tile);
 
 		EGryll p1gryll = PlayerManager.ins.Player1.GetGryll ();
 		EGryll p2gryll = PlayerManager.ins.Player2.GetGryll ();
@@ -168,8 +168,8 @@ public class LevelManager : MonoBehaviour
 	public void LevelSetup()
 	{
 		SpawnPlayers ();
-		RotatePlayerView (P1Rotation, PlayerManager.ins.P1, Player1Map);
-		RotatePlayerView (P2Rotation, PlayerManager.ins.P2, Player2Map);
+		RotatePlayerView (PlayerRotations[0], PlayerManager.ins.P1, Player1Map);
+		RotatePlayerView (PlayerRotations[1], PlayerManager.ins.P2, Player2Map);
 	}
 
 	void RotatePlayerView(ERotation Rot, GameObject Player, Tile[,] PlayerMap)

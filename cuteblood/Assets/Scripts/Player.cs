@@ -74,9 +74,10 @@ public class Player : MonoBehaviour {
 		TimeSinceLastMove = MoveCooldown;
 	}
 
-	public void SetTile(Tile tile)
+	public void SetInitialTile(Tile tile)
 	{
 		CurrentTile = tile;
+		PreviousTile = tile;
 	}
 
 	public EGryll GetGryll ()
@@ -131,7 +132,8 @@ public class Player : MonoBehaviour {
 			bHasMoved = true;
 			TimeSinceLastMove = 0;
 
-			Tile Dest = CurrentTile.NeighbourInDirection (MoveDirection);
+			EDirection RelativeDirection = HelperFunctions.GetDirection(((int)MoveDirection + (int)LevelManager.ins.PlayerRotations[ID])%4);
+			Tile Dest = CurrentTile.NeighbourInDirection (RelativeDirection);
 			bool bDisturbTile = (TimeSinceLastMove < MoveCooldown) ? true : false;
 			if (Dest != null)
 			{

@@ -48,5 +48,24 @@ namespace AssemblyCSharp
 		CW180,
 		CW270
 	}
+
+	public class HelperFunctions
+	{
+		public static EDirection GetDirection(int index)
+		{
+			switch (index)
+			{
+			case 0:
+				return EDirection.UP;
+			case 1:
+				return EDirection.LEFT;
+			case 2:
+				return EDirection.DOWN;
+			case 3:
+				return EDirection.RIGHT;
+			}
+			return EDirection.UP;
+		}
+	}
 }
 

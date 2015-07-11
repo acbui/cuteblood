@@ -15,7 +15,7 @@ public class Tile : MonoBehaviour {
 	bool bOccupied;
 	bool bOverlappingPlayers;
 
-	public Tile NeighbourInDirection (EAction MoveDirection)
+	public Tile NeighbourInDirection (EDirection MoveDirection)
 	{
 		return Neighbours [(int)MoveDirection];
 	}
