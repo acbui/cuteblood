@@ -12,6 +12,9 @@ public class LevelManager : MonoBehaviour
 	Tile[,] Player1Map;
 	Tile[,] Player2Map;
 
+	ERotation P1Rotation;
+	ERotation P2Rotation;
+
 	int MapLength;
 	int MapHeight;
 	
@@ -27,6 +30,9 @@ public class LevelManager : MonoBehaviour
 
 		SpriteRenderer renderer = TilePrefab.GetComponent<SpriteRenderer> ();
 		TileOffset = renderer.sprite.bounds.size.x;
+
+		P1Rotation = GetRandomRotation ();
+		P2Rotation = GetRandomRotation ();
 	}
 	
 	public void SpawnRectangularGrid(int Length, int Height)
@@ -157,6 +163,43 @@ public class LevelManager : MonoBehaviour
 			CamObj.name = "Player2 Camera";
 			cam.rect = new Rect (0.5f,0,0.5f,1);
 		}
+	}
+
+	public void LevelSetup()
+	{
+		SpawnPlayers ();
+		RotatePlayerView (P1Rotation, PlayerManager.ins.P1, Player1Map);
+		RotatePlayerView (P2Rotation, PlayerManager.ins.P2, Player2Map);
+	}
+
+	void RotatePlayerView(ERotation Rot, GameObject Player, Tile[,] PlayerMap)
+	{
+		Player.transform.Rotate (0, 0, (int)Rot * 90);
+
+		for (int i = 0; i < MapHeight; i++)
+		{
+			for (int j = 0; j < MapLength; j++)
+			{
+				PlayerMap[i,j].gameObject.transform.Rotate (0, 0, (int)Rot * 90);
+			}
+		}
+	}
+
+	ERotation GetRandomRotation()
+	{
+		int ran = Random.Range (0, 4);
+		
+		switch (ran) {
+		case 0:
+			return ERotation.CW0;
+		case 1:
+			return ERotation.CW90;
+		case 2:
+			return ERotation.CW180;
+		case 3:
+			return ERotation.CW270;
+		}
+		return ERotation.CW0;
 	}
 }
 

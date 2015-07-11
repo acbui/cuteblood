@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour {
 	{
 		PlayerMgr.CreatePlayer (0, EGryll.ACB);
 		LevelMgr.SpawnRectangularGrid (8, 8);
-		LevelMgr.SpawnPlayers ();
+		LevelMgr.LevelSetup ();
 	}
 
 	public void EndGame (EGryll Winner)

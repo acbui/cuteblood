@@ -40,5 +40,13 @@ namespace AssemblyCSharp
 		ACB,
 		BEARD
 	}
+
+	public enum ERotation
+	{
+		CW0,
+		CW90,
+		CW180,
+		CW270
+	}
 }
 
