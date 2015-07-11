@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour {
 	void OnEnable()
 	{
 		ins = this;
+		LevelMgr = gameObject.GetComponent<LevelManager> ();
+		PlayerMgr = gameObject.GetComponent<PlayerManager> ();
+		InputMgr = gameObject.GetComponent<InputManager> ();
 	}
 
 	void Start()
