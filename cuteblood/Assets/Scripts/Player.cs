@@ -13,6 +13,7 @@ public class Player : MonoBehaviour {
 	public int ID;
 	EGryll Gryll;
 	public Tile CurrentTile;
+	private Tile PreviousTile;
 	State CurrentState;
 
 	bool bHasMoved;
@@ -22,8 +23,12 @@ public class Player : MonoBehaviour {
 	public float MoveCooldown;
 	public float MoveDelay;
 
+	public float MoveSpeed;
+	public float MoveStartTime;
+	public float MoveDistance;
+
 	float TimeSinceLastHug;
-	float TimeSinceLastMove;
+	public float TimeSinceLastMove;
 
 	void Update()
 	{
@@ -45,12 +50,17 @@ public class Player : MonoBehaviour {
 			if (TimeSinceLastMove < MoveCooldown)
 			{
 				TimeSinceLastMove += Time.deltaTime;
+
+				float distanceCovered = (Time.time - MoveStartTime) * MoveSpeed;
+				float fractionMove = distanceCovered / MoveDistance;
+				transform.position = Vector3.Lerp(PreviousTile.transform.position, CurrentTile.transform.position, fractionMove);
 			}
 			else 
 			{
 				TimeSinceLastMove = MoveCooldown;
 				CurrentTile.ResetState ();
 				bHasMoved = false;
+				transform.position = CurrentTile.transform.position;
 			}
 		}
 	}
@@ -60,8 +70,8 @@ public class Player : MonoBehaviour {
 		ID = id;
 		Gryll = gryll;
 		CurrentState = State.INVISIBLE;
-		TimeSinceLastHug = 0;
-		TimeSinceLastMove = 0;
+		TimeSinceLastHug = HugCooldown;
+		TimeSinceLastMove = MoveCooldown;
 	}
 
 	public void SetTile(Tile tile)
@@ -117,6 +127,7 @@ public class Player : MonoBehaviour {
 	{
 		if (TimeSinceLastMove > MoveDelay)
 		{
+			print ("here");
 			bHasMoved = true;
 			TimeSinceLastMove = 0;
 
@@ -125,7 +136,10 @@ public class Player : MonoBehaviour {
 			if (Dest != null)
 			{
 				CurrentTile.Exited();
+				PreviousTile = CurrentTile;
 				CurrentTile = Dest;
+				MoveDistance = Vector3.Distance (PreviousTile.transform.position, CurrentTile.transform.position);
+				MoveStartTime = Time.time;
 			}
 
 			CurrentTile.Entered (bDisturbTile, CurrentTile);

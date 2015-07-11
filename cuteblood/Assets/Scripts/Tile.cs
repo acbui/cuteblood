@@ -17,18 +17,7 @@ public class Tile : MonoBehaviour {
 
 	public Tile NeighbourInDirection (EAction MoveDirection)
 	{
-		switch (MoveDirection)
-		{
-		case EAction.MoveUP:
-			return Neighbours[0];
-		case EAction.MoveLEFT:
-			return Neighbours[1];
-		case EAction.MoveDOWN:
-			return Neighbours[2];
-		case EAction.MoveRIGHT:
-			return Neighbours[3];
-		}
-		return null;
+		return Neighbours [(int)MoveDirection];
 	}
 
 	public bool IsHuggable()

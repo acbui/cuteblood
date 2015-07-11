@@ -12,12 +12,12 @@ public class InputManager : MonoBehaviour {
 		public void Set ( KeyCode[] Keys )
 		{
 			bKeyPressed = new bool[ Keys.Length ];
-			for (int i = 0; i < Keys.Length; i++)
-			{
-				bKeyPressed[i] = Input.GetKeyDown(Keys[i]);
-			}
 			KeyInputs = new KeyCode[ Keys.Length ];
 			Keys.CopyTo(KeyInputs, 0);
+			for (int i = 0; i < Keys.Length; i++)
+			{
+				bKeyPressed[i] = Input.GetKeyDown(KeyInputs[i]);
+			}
 		}
 		
 		public bool GetKeyPressed (int index)
@@ -97,29 +97,23 @@ public class InputManager : MonoBehaviour {
 	{
 		for (int i = 0; i < PlayerOneInputs.Length(); i++)
 		{
-			if (PlayerOneInputs.GetKeyPressed(i))
+			if (Input.GetKeyDown (PlayerOneKeyMoves[i]))
 			{
 				if (PlayerManager.ins != null)
 				{
-					PlayerManager.ins.Player1.InputRead (PlayerOneInputs.GetAction (i));
+					PlayerManager.ins.P1.GetComponent<Player>().InputRead (PlayerOneInputs.GetAction (i));
 				}
 			}
 		
 			if (GameManager.ins.GameMode == EGameMode.MP)
 			{
-				if (PlayerTwoInputs.GetKeyPressed(i))
+				if (Input.GetKeyDown (PlayerTwoKeyMoves[i]))
 				{
 					if (PlayerManager.ins != null)
 					{
-						PlayerManager.ins.Player2.InputRead (PlayerTwoInputs.GetAction (i));
+						PlayerManager.ins.P2.GetComponent<Player>().InputRead (PlayerTwoInputs.GetAction (i));
 					}
 				}
-			}
-			else if (GameManager.ins.GameMode == EGameMode.SP)
-			{
-				// magic number: number of possible actions (including none)
-				EAction RandomAction = PlayerOneInputs.GetAction (Random.Range (0, 5));
-				PlayerManager.ins.Player2.InputRead (RandomAction);
 			}
 		}
 	}
