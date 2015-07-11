@@ -34,7 +34,7 @@ namespace AssemblyCSharp
 		MP
 	}
 
-	public enum EWinner
+	public enum EGryll
 	{
 		WINSTON,
 		ACB,

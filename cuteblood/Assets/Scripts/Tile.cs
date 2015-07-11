@@ -15,12 +15,6 @@ public class Tile : MonoBehaviour {
 	bool bOccupied;
 	bool bOverlappingPlayers;
 
-	void OnEnable ()
-	{
-		bOccupied = false;
-		bOverlappingPlayers = false;
-	}
-
 	public Tile NeighbourInDirection (EAction MoveDirection)
 	{
 		switch (MoveDirection)
@@ -77,8 +71,25 @@ public class Tile : MonoBehaviour {
 		}
 	}
 
-	public void Reset()
+	public void ResetState()
 	{
 		CurrentState = State.UNDISTURBED;
+	}
+
+	public void Initialize()
+	{
+		Neighbours = new Tile[4];
+		CurrentState = State.UNDISTURBED;
+		bOccupied = false;
+		bOverlappingPlayers = false;
+	}
+
+	public void SetNeighbour(Tile neighbour, EDirection direction)
+	{
+		if (neighbour != null)
+		{
+			int neighbourIndex = (int) direction;
+			Neighbours[neighbourIndex] = neighbour;
+		}
 	}
 }

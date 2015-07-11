@@ -11,6 +11,7 @@ public class Player : MonoBehaviour {
 	}
 
 	int ID;
+	EGryll Gryll;
 	Tile CurrentTile;
 	State CurrentState;
 
@@ -48,16 +49,16 @@ public class Player : MonoBehaviour {
 			else 
 			{
 				TimeSinceLastMove = MoveCooldown;
-				CurrentTile.Reset ();
+				CurrentTile.ResetState ();
 				bHasMoved = false;
 			}
 		}
 	}
 
-	public void Initialize(int id, Tile first)
+	public Player(int id, EGryll gryll)
 	{
 		ID = id;
-		CurrentTile = first;
+		Gryll = gryll;
 		CurrentState = State.INVISIBLE;
 		TimeSinceLastHug = 0;
 		TimeSinceLastMove = 0;
@@ -92,7 +93,7 @@ public class Player : MonoBehaviour {
 
 			if (CurrentTile.IsHuggable())
 			{
-				GameManager.ins.EndGame(ID);
+				GameManager.ins.EndGame(Gryll);
 			}
 		}
 	}

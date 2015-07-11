@@ -7,18 +7,16 @@ public class GameManager : MonoBehaviour {
 	public static GameManager ins;
 	public EGameMode GameMode;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
-	public void EndGame (int WinnerID)
+	public void EndGame (EGryll Winner)
 	{
-
+		switch (Winner)
+		{
+		case EGryll.WINSTON:
+			break;
+		case EGryll.ACB:
+			break;
+		case EGryll.BEARD:
+			break;
+		}
 	}
 }

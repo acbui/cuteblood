@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using AssemblyCSharp;
 
 public class PlayerManager : MonoBehaviour {
 
@@ -8,13 +9,26 @@ public class PlayerManager : MonoBehaviour {
 	public Player Player1;
 	public Player Player2;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+	public void CreatePlayer (int ID, EGryll SelectedGryll)
+	{
+		if (ID == 0)
+		{
+			Player1 = new Player(ID, SelectedGryll);
+			if (GameManager.ins.GameMode == EGameMode.SP)
+			{
+				if (SelectedGryll == EGryll.WINSTON)
+				{
+					Player2 = new Player(ID+1, EGryll.ACB);
+                }
+				else 
+				{
+					Player2 = new Player(ID+1, EGryll.WINSTON);
+				}
+			}
+		}
+		else 
+		{
+			Player2 = new Player(ID, SelectedGryll);
+		}
 	}
 }

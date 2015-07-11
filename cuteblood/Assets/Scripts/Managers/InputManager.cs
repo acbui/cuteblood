@@ -78,7 +78,7 @@ public class InputManager : MonoBehaviour {
 		}
 	}
 
-	public void ReadInput()
+	public void ReadGameInput()
 	{
 		for (int i = 0; i < PlayerOneInputs.Length(); i++)
 		{
