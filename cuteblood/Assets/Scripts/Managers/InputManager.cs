@@ -106,8 +106,8 @@ public class InputManager : MonoBehaviour {
 			if (Input.GetKeyDown (KeyCode.Space)) {
 				GameManager.ins.OpenMenu ();
 			}
-		} else if (bAllowGameInput)
-			;
+		} 
+		else if (bAllowGameInput)
 		{
 			for (int i = 0; i < PlayerOneInputs.Length(); i++)
 			{

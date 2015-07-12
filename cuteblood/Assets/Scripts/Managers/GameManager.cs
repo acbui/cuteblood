@@ -22,7 +22,9 @@ public class GameManager : MonoBehaviour {
 	Color StartColor;
 	Color EndColor;
 
+	public Camera MainCamera;
 	public GameObject SpriteScreen;
+	public Sprite StartScreen;
 	public Sprite CharacterScreen;
 	public Sprite[] WinScreens;
 
@@ -60,15 +62,11 @@ public class GameManager : MonoBehaviour {
 
 	public void EndGame (EGryll Winner)
 	{
-		switch (Winner)
-		{
-		case EGryll.WINSTON:
-			break;
-		case EGryll.ACB:
-			break;
-		case EGryll.BEARD:
-			break;
-		}
+		MainCamera.clearFlags = CameraClearFlags.Nothing;
+		MainCamera.depth = 5;
+		SpriteRenderer renderer = SpriteScreen.GetComponent<SpriteRenderer> ();
+		renderer.sprite = WinScreens [(int)Winner];
+		renderer.enabled = true;
 
 		GameView = EGameView.End;
 		InputMgr.bAllowGameInput = false;
@@ -77,7 +75,7 @@ public class GameManager : MonoBehaviour {
 	public void OpenMenu ()
 	{
 		GameView = EGameView.Menu;
-		SpriteScreen.SetActive (true);
+		SpriteScreen.GetComponent<SpriteRenderer> ().sprite = StartScreen;
 		SpriteScreen.GetComponentInChildren<MeshRenderer> ().enabled = true;
 		bGameStarted = false;
 	}
@@ -87,7 +85,6 @@ public class GameManager : MonoBehaviour {
 		if (!bGameStarted)
 		{
 			GameView = EGameView.Game;
-			bGameStarted = true;
 			SpriteScreen.GetComponentInChildren<MeshRenderer> ().enabled = false;
 			SpriteScreen.GetComponent<SpriteRenderer> ().sprite = CharacterScreen;
 			
@@ -101,18 +98,20 @@ public class GameManager : MonoBehaviour {
 
 	IEnumerator DelayFadeStart()
 	{
-		yield return new WaitForSeconds (0.5f);
+		yield return new WaitForSeconds (1f);
 		bGameStarted = true;
 	}
 
 	IEnumerator DelayGameStart()
 	{
-		yield return new WaitForSeconds (1.5f);
+		yield return new WaitForSeconds (2f);
 		GenerateGame ();
 	}
 
 	void GenerateGame()
 	{
+		MainCamera.clearFlags = CameraClearFlags.SolidColor;
+		MainCamera.depth = -5;
 		SpriteRenderer renderer = SpriteScreen.GetComponent<SpriteRenderer> ();
 		renderer.enabled = false;
 		renderer.color = StartColor;
