@@ -17,6 +17,14 @@ public class GameManager : MonoBehaviour {
 
 	float TimeSinceGameStart;
 	public float GameDuration;
+	bool bGameStarted;
+	public float FadeSpeed;
+	Color StartColor;
+	Color EndColor;
+
+	public GameObject SpriteScreen;
+	public Sprite CharacterScreen;
+	public Sprite[] WinScreens;
 
 	void OnEnable()
 	{
@@ -26,6 +34,7 @@ public class GameManager : MonoBehaviour {
 		InputMgr = gameObject.GetComponent<InputManager> ();
 
 		GameView = EGameView.Menu;
+		bGameStarted = false;
 	}
 
 	void Start()
@@ -35,6 +44,10 @@ public class GameManager : MonoBehaviour {
 
 	void Update()
 	{
+		if (bGameStarted)
+		{
+			SpriteScreen.GetComponent<SpriteRenderer>().color = Color.Lerp (SpriteScreen.GetComponent<SpriteRenderer>().color, EndColor, FadeSpeed*Time.deltaTime);
+		}
 		if (GameView == EGameView.Game)
 		{
 			TimeSinceGameStart += Time.deltaTime;
@@ -63,14 +76,45 @@ public class GameManager : MonoBehaviour {
 	public void OpenMenu ()
 	{
 		GameView = EGameView.Menu;
+		SpriteScreen.SetActive (true);
+		SpriteScreen.GetComponentInChildren<MeshRenderer> ().enabled = true;
 	}
 
 	public void BeginGame()
 	{
+		SpriteScreen.GetComponentInChildren<MeshRenderer> ().enabled = false;
+		SpriteScreen.GetComponent<SpriteRenderer> ().sprite = CharacterScreen;
+
+		StartColor = SpriteScreen.GetComponent<SpriteRenderer>().color;
+		EndColor = new Color (StartColor.r, StartColor.g, StartColor.b, 0);
+
+		StartCoroutine ("DelayFadeStart");
+		StartCoroutine ("DelayGameStart");
+	}
+
+	IEnumerator DelayFadeStart()
+	{
+		yield return new WaitForSeconds (0.5f);
+		bGameStarted = true;
+	}
+
+	IEnumerator DelayGameStart()
+	{
+		yield return new WaitForSeconds (1.5f);
+		GenerateGame ();
+	}
+
+	void GenerateGame()
+	{
+		SpriteRenderer renderer = SpriteScreen.GetComponent<SpriteRenderer> ();
+		renderer.enabled = false;
+		renderer.color = StartColor;
+		bGameStarted = false;
+
 		PlayerMgr.CreatePlayer (0, EGryll.ACB);
 		LevelMgr.SpawnRectangularGrid (8, 8);
 		LevelMgr.LevelSetup ();
-
+		
 		GameView = EGameView.Game;
 		TimeSinceGameStart = 0;
 	}
