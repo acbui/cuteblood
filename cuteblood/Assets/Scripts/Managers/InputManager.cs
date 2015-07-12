@@ -57,7 +57,7 @@ public class InputManager : MonoBehaviour {
 	public static InputManager ins;
 
 	public bool bAllowGameInput;
-	bool MakeAIMove;
+	bool bMakeAIMove;
 
 	PlayerInputs PlayerOneInputs;
 	PlayerInputs PlayerTwoInputs;
@@ -118,26 +118,30 @@ public class InputManager : MonoBehaviour {
 			{
 				if (Input.GetKeyDown (PlayerOneKeyMoves[i]))
 				{
-					if (PlayerManager.ins != null)
-					{
-						PlayerManager.ins.P1.GetComponent<Player>().InputRead (PlayerOneInputs.GetAction (i));
-					}
+
+					PlayerManager.ins.P1.GetComponent<Player>().InputRead (PlayerOneInputs.GetAction (i));
 				}
 			
 				if (GameManager.ins.GameMode == EGameMode.MP)
 				{
 					if (Input.GetKeyDown (PlayerTwoKeyMoves[i]))
 					{
-						if (PlayerManager.ins != null)
-						{
-							PlayerManager.ins.P2.GetComponent<Player>().InputRead (PlayerTwoInputs.GetAction (i));
-						}
+						PlayerManager.ins.P2.GetComponent<Player>().InputRead (PlayerTwoInputs.GetAction (i));
 					}
 				}
-				else 
+				else if (!bMakeAIMove)
 				{
+					PlayerManager.ins.P2.GetComponent<Player>().InputRead (PlayerTwoInputs.GetAction (Random.Range (0, PlayerTwoInputs.Length ())));
+					bMakeAIMove = true;
+					StartCoroutine ("StartAI");
 				}
 			}
 		}
+	}
+
+	IEnumerator StartAI()
+	{
+		yield return new WaitForSeconds (Random.Range (0.2f, 1f));
+		bMakeAIMove = false; 
 	}
 }

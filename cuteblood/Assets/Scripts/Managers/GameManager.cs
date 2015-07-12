@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour {
 		bGameStarted = false;
 		MainCamera.clearFlags = CameraClearFlags.Nothing;
 		MainCamera.depth = 5;
+		CurrentSetting = EditSettings.MODE;
 	}
 
 	void Update()
@@ -120,6 +121,7 @@ public class GameManager : MonoBehaviour {
 				}
 				else 
 				{
+					LeftTriangle.enabled = true;
 					GameDuration += 5;
 					DurationSetting.GetComponent<TextMesh>().text = GameDuration + " seconds";
 				}
@@ -135,8 +137,15 @@ public class GameManager : MonoBehaviour {
 				}
 				else 
 				{
-					GameDuration -= 5;
-					DurationSetting.GetComponent<TextMesh>().text = GameDuration + " seconds";
+					if (GameDuration > 0)
+					{
+						GameDuration -= 5;
+						DurationSetting.GetComponent<TextMesh>().text = GameDuration + " seconds";
+					}
+					if (GameDuration == 0)
+					{
+						LeftTriangle.enabled = false;
+					}
 				}
 			}
 		}
@@ -164,15 +173,20 @@ public class GameManager : MonoBehaviour {
 
 		GameView = EGameView.End;
 		InputMgr.bAllowGameInput = false;
+		bGameStarted = false;
 	}
 
 	public void OpenMenu ()
 	{
+		MainCamera.clearFlags = CameraClearFlags.SolidColor;
+		MainCamera.depth = -5;
 		ResetGame ();
+		foreach (MeshRenderer m in Start.GetComponentsInChildren<MeshRenderer>())
+		{
+			m.enabled = true;
+		}
 		GameView = EGameView.Menu;
 		SpriteScreen.GetComponent<SpriteRenderer> ().sprite = StartScreen;
-
-		bGameStarted = false;
 	}
 
 	public void OpenSettings()
@@ -180,7 +194,6 @@ public class GameManager : MonoBehaviour {
 		Start.SetActive (false);
 		Settings.SetActive (true);
 		bInSettings = true;
-		CurrentSetting = EditSettings.MODE;
 	}
 
 	public void BeginGame()
@@ -188,7 +201,10 @@ public class GameManager : MonoBehaviour {
 		if (!bGameStarted)
 		{
 			GameView = EGameView.Game;
-			foreach (MeshRenderer m in SpriteScreen.GetComponentsInChildren<MeshRenderer>())
+			Settings.SetActive(false);
+			Start.SetActive(true);
+			bInSettings = false;
+			foreach (MeshRenderer m in Start.GetComponentsInChildren<MeshRenderer>())
 			{
 				m.enabled = false;
 			}
@@ -216,8 +232,6 @@ public class GameManager : MonoBehaviour {
 
 	void GenerateGame()
 	{
-		MainCamera.clearFlags = CameraClearFlags.SolidColor;
-		MainCamera.depth = -5;
 		SpriteRenderer renderer = SpriteScreen.GetComponent<SpriteRenderer> ();
 		renderer.enabled = false;
 		renderer.color = StartColor;
