@@ -40,7 +40,6 @@ public class Player : MonoBehaviour {
 			}
 			else 
 			{
-				TimeSinceLastHug = HugCooldown;
 				CurrentState = State.INVISIBLE;
 				bHasHugged = false;
 			}
@@ -57,8 +56,6 @@ public class Player : MonoBehaviour {
 			}
 			else 
 			{
-				TimeSinceLastMove = MoveCooldown;
-				CurrentTile.ResetState ();
 				bHasMoved = false;
 				transform.position = CurrentTile.transform.position;
 			}
@@ -138,12 +135,13 @@ public class Player : MonoBehaviour {
 	{
 		if (TimeSinceLastMove > MoveDelay)
 		{
+			bool bDisturbTile = (TimeSinceLastMove < MoveCooldown);
 			bHasMoved = true;
 			TimeSinceLastMove = 0;
 
 			EDirection RelativeDirection = HelperFunctions.GetDirection(((int)MoveDirection + (int)LevelManager.ins.PlayerRotations[ID])%4);
 			Tile Dest = CurrentTile.NeighbourInDirection (RelativeDirection);
-			bool bDisturbTile = (TimeSinceLastMove < MoveCooldown) ? true : false;
+
 			if (Dest != null)
 			{
 				CurrentTile.Exited();

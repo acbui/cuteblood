@@ -4,14 +4,7 @@ using AssemblyCSharp;
 
 public class Tile : MonoBehaviour {
 
-	enum State
-	{
-		UNDISTURBED,
-		DISTURBED
-	}
-
 	Tile[] Neighbours;
-	State CurrentState;
 	bool bOccupied;
 
 	public Tile NeighbourInDirection (EDirection MoveDirection)
@@ -28,8 +21,13 @@ public class Tile : MonoBehaviour {
 	{
 		if (bDisturbed)
 		{
-			CurrentState = State.DISTURBED;
+			gameObject.GetComponent<Animator>().SetBool ("bDisturbed", bDisturbed);
+			string s = gameObject.name.Substring(2);
+			
+			GameObject tileObj = GameObject.Find ("P" + (gameObject.name.Contains ("1") ? 2 : 1) + s);
+			tileObj.GetComponent<Animator> ().SetBool ("bDisturbed", bDisturbed);
 		}
+			
 		bOccupied = true;
 	}
 
@@ -37,16 +35,11 @@ public class Tile : MonoBehaviour {
 	{
 		bOccupied = false;
 	}
-
-	public void ResetState()
-	{
-		CurrentState = State.UNDISTURBED;
-	}
+	
 
 	public void Initialize()
 	{
 		Neighbours = new Tile[4];
-		CurrentState = State.UNDISTURBED;
 		bOccupied = false;
 	}
 
