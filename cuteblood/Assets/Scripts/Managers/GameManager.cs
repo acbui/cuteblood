@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour {
 	public EGameView GameView;
 
 	float TimeSinceGameStart;
+	public float GameDuration;
 
 	void OnEnable()
 	{
@@ -30,6 +31,18 @@ public class GameManager : MonoBehaviour {
 	void Start()
 	{
 		//BeginGame ();
+	}
+
+	void Update()
+	{
+		if (GameView == EGameView.Game)
+		{
+			TimeSinceGameStart += Time.deltaTime;
+			if (TimeSinceGameStart >= GameDuration)
+			{
+				EndGame (EGryll.BEARD);
+			}
+		}
 	}
 
 	public void EndGame (EGryll Winner)
@@ -59,5 +72,6 @@ public class GameManager : MonoBehaviour {
 		LevelMgr.LevelSetup ();
 
 		GameView = EGameView.Game;
+		TimeSinceGameStart = 0;
 	}
 }

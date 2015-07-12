@@ -23,6 +23,8 @@ public class LevelManager : MonoBehaviour
 	
 	public float TileOffset;
 
+	public Sprite[] GrassSprites;
+
 	void OnEnable()
 	{
 		ins = this;
@@ -51,7 +53,9 @@ public class LevelManager : MonoBehaviour
 		{
 			for (int column = 0; column < Length; column++)
 			{
+				Sprite grassSprite = GrassSprites[Random.Range (0, GrassSprites.Length)];
 				GameObject newTile = Instantiate(TilePrefab, p1location, Quaternion.identity) as GameObject;
+				newTile.GetComponent<SpriteRenderer>().sprite = grassSprite;
 				newTile.transform.parent = P1Map.transform;
 				newTile.name = "P1 " + row + "x" + column;
 
@@ -79,7 +83,8 @@ public class LevelManager : MonoBehaviour
 				GameObject newTile2 = Instantiate(TilePrefab, p2location, Quaternion.identity) as GameObject;
 				newTile2.transform.parent = P2Map.transform;
 				newTile2.name = "P2 " + row + "x" + column;
-				
+				newTile2.GetComponent<SpriteRenderer>().sprite = grassSprite;
+
 				Tile tileComponent2 = newTile2.GetComponent<Tile>();
 				
 				if (tileComponent2 != null)
