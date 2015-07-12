@@ -13,7 +13,6 @@ public class Tile : MonoBehaviour {
 	Tile[] Neighbours;
 	State CurrentState;
 	bool bOccupied;
-	bool bOverlappingPlayers;
 
 	public Tile NeighbourInDirection (EDirection MoveDirection)
 	{
@@ -22,42 +21,21 @@ public class Tile : MonoBehaviour {
 
 	public bool IsHuggable()
 	{
-		if (bOverlappingPlayers)
-		{
-			return true;
-		}
-		return false;
+		return bOccupied;
 	}
 
-	public void Entered(bool bDisturbed, Tile PreviousTile)
+	public void Entered(bool bDisturbed)
 	{
 		if (bDisturbed)
 		{
 			CurrentState = State.DISTURBED;
 		}
-		if (PreviousTile != this)
-		{
-			if (bOccupied)
-			{
-				bOverlappingPlayers = true;
-			}
-			else 
-			{
-				bOccupied = true;
-			}
-		}
+		bOccupied = true;
 	}
 
 	public void Exited()
 	{
-		if (bOverlappingPlayers)
-		{
-			bOverlappingPlayers = false;
-		}
-		else 
-		{
-			bOccupied = false;
-		}
+		bOccupied = false;
 	}
 
 	public void ResetState()
@@ -70,7 +48,6 @@ public class Tile : MonoBehaviour {
 		Neighbours = new Tile[4];
 		CurrentState = State.UNDISTURBED;
 		bOccupied = false;
-		bOverlappingPlayers = false;
 	}
 
 	public void SetNeighbour(Tile neighbour, EDirection direction)

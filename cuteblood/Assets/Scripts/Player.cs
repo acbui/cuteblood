@@ -78,6 +78,7 @@ public class Player : MonoBehaviour {
 	{
 		CurrentTile = tile;
 		PreviousTile = tile;
+		tile.Entered (false);
 	}
 
 	public EGryll GetGryll ()
@@ -98,7 +99,6 @@ public class Player : MonoBehaviour {
 		}
 		else if (ActionInput == EAction.HUG)
 		{
-			print ("HUG");
 			TryHug ();
 		}
 		else 
@@ -115,11 +115,19 @@ public class Player : MonoBehaviour {
 		}
 		if (TimeSinceLastHug > HugDelay)
 		{
-			print ("TRY HUG");
 			bHasHugged = true;
 			gameObject.GetComponentInChildren<Animator>().SetBool ("bHug", true);
 			TimeSinceLastHug = 0;
-			if (CurrentTile.IsHuggable())
+			string s = CurrentTile.gameObject.name.Substring(2);
+
+			GameObject tileObj = GameObject.Find ("P" + (ID == 0 ? 2 : 1) + s);
+			Tile tileScript = null;
+			if (tileObj != null)
+			{
+				tileScript = tileObj.GetComponent<Tile>();
+			}
+
+			if (tileScript.IsHuggable())
 			{
 				GameManager.ins.EndGame(Gryll);
 			}
@@ -145,7 +153,7 @@ public class Player : MonoBehaviour {
 				MoveStartTime = Time.time;
 			}
 
-			CurrentTile.Entered (bDisturbTile, CurrentTile);
+			CurrentTile.Entered (bDisturbTile);
 		}
 	}
 }
