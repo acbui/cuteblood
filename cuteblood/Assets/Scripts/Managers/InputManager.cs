@@ -99,6 +99,10 @@ public class InputManager : MonoBehaviour {
 
 	public void ReadGameInput()
 	{
+		if (Input.GetKeyDown(KeyCode.Escape))
+		{
+			Application.Quit ();
+		}
 		if (GameManager.ins.GameView == EGameView.Menu) {
 			if (Input.GetKeyDown (KeyCode.Space)) {
 				GameManager.ins.BeginGame ();
