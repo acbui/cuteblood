@@ -4,17 +4,10 @@ using AssemblyCSharp;
 
 public class Player : MonoBehaviour {
 
-	enum State
-	{
-		INVISIBLE,
-		VISIBLE
-	}
-
 	public int ID;
 	EGryll Gryll;
 	public Tile CurrentTile;
 	private Tile PreviousTile;
-	State CurrentState;
 
 	bool bHasMoved;
 	bool bHasHugged;
@@ -40,7 +33,6 @@ public class Player : MonoBehaviour {
 			}
 			else 
 			{
-				CurrentState = State.INVISIBLE;
 				bHasHugged = false;
 			}
 		}
@@ -66,7 +58,6 @@ public class Player : MonoBehaviour {
 	{
 		ID = id;
 		Gryll = gryll;
-		CurrentState = State.INVISIBLE;
 		TimeSinceLastHug = HugCooldown;
 		TimeSinceLastMove = MoveCooldown;
 	}
@@ -106,23 +97,19 @@ public class Player : MonoBehaviour {
 
 	void TryHug()
 	{
+		string s = CurrentTile.gameObject.name.Substring(2);
+		GameObject tileObj = GameObject.Find ("P" + (ID == 0 ? 2 : 1) + s);
+		Tile tileScript = tileObj.GetComponent<Tile> ();
+
 		if (TimeSinceLastHug < HugCooldown)
 		{
-			CurrentState = State.VISIBLE;
+			tileScript.ShowShadow(Gryll);
 		}
 		if (TimeSinceLastHug > HugDelay)
 		{
 			bHasHugged = true;
 			gameObject.GetComponentInChildren<Animator>().SetBool ("bHug", true);
 			TimeSinceLastHug = 0;
-			string s = CurrentTile.gameObject.name.Substring(2);
-
-			GameObject tileObj = GameObject.Find ("P" + (ID == 0 ? 2 : 1) + s);
-			Tile tileScript = null;
-			if (tileObj != null)
-			{
-				tileScript = tileObj.GetComponent<Tile>();
-			}
 
 			if (tileScript.IsHuggable())
 			{

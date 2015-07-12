@@ -7,6 +7,21 @@ public class Tile : MonoBehaviour {
 	Tile[] Neighbours;
 	bool bOccupied;
 
+	public SpriteRenderer GryllShadow;
+	public Sprite[] ShadowSprites;
+	bool bShadow;
+	public float FadeSpeed;
+	Color StartColor;
+	Color EndColor;
+
+	void Update()
+	{
+		if (bShadow)
+		{
+			GryllShadow.color = Color.Lerp (GryllShadow.color, EndColor, FadeSpeed*Time.deltaTime);
+		}
+	}
+
 	public Tile NeighbourInDirection (EDirection MoveDirection)
 	{
 		return Neighbours [(int)MoveDirection];
@@ -41,6 +56,10 @@ public class Tile : MonoBehaviour {
 	{
 		Neighbours = new Tile[4];
 		bOccupied = false;
+		bShadow = false;
+
+		StartColor = GryllShadow.color;
+		EndColor = new Color (StartColor.r, StartColor.g, StartColor.b, 0);
 	}
 
 	public void SetNeighbour(Tile neighbour, EDirection direction)
@@ -50,5 +69,28 @@ public class Tile : MonoBehaviour {
 			int neighbourIndex = (int) direction;
 			Neighbours[neighbourIndex] = neighbour;
 		}
+	}
+
+	public void ShowShadow (EGryll Gryll)
+	{
+		GryllShadow.sprite = ShadowSprites [(int)Gryll];
+		GryllShadow.enabled = true;
+
+		StartCoroutine ("DelayStartFade");
+		StartCoroutine ("DelayEndFade");
+	}
+
+	IEnumerator DelayStartFade()
+	{
+		yield return new WaitForSeconds (0.5f);
+		bShadow = true;
+	}
+
+	IEnumerator DelayEndFade()
+	{
+		yield return new WaitForSeconds (4);
+		bShadow = false;
+		GryllShadow.enabled = false;
+		GryllShadow.color = StartColor;
 	}
 }

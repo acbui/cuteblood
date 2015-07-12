@@ -71,6 +71,7 @@ public class GameManager : MonoBehaviour {
 		}
 
 		GameView = EGameView.End;
+		InputMgr.bAllowGameInput = false;
 	}
 
 	public void OpenMenu ()
@@ -78,18 +79,24 @@ public class GameManager : MonoBehaviour {
 		GameView = EGameView.Menu;
 		SpriteScreen.SetActive (true);
 		SpriteScreen.GetComponentInChildren<MeshRenderer> ().enabled = true;
+		bGameStarted = false;
 	}
 
 	public void BeginGame()
 	{
-		SpriteScreen.GetComponentInChildren<MeshRenderer> ().enabled = false;
-		SpriteScreen.GetComponent<SpriteRenderer> ().sprite = CharacterScreen;
-
-		StartColor = SpriteScreen.GetComponent<SpriteRenderer>().color;
-		EndColor = new Color (StartColor.r, StartColor.g, StartColor.b, 0);
-
-		StartCoroutine ("DelayFadeStart");
-		StartCoroutine ("DelayGameStart");
+		if (!bGameStarted)
+		{
+			GameView = EGameView.Game;
+			bGameStarted = true;
+			SpriteScreen.GetComponentInChildren<MeshRenderer> ().enabled = false;
+			SpriteScreen.GetComponent<SpriteRenderer> ().sprite = CharacterScreen;
+			
+			StartColor = SpriteScreen.GetComponent<SpriteRenderer>().color;
+			EndColor = new Color (StartColor.r, StartColor.g, StartColor.b, 0);
+			
+			StartCoroutine ("DelayFadeStart");
+			StartCoroutine ("DelayGameStart");
+		}
 	}
 
 	IEnumerator DelayFadeStart()
@@ -114,8 +121,9 @@ public class GameManager : MonoBehaviour {
 		PlayerMgr.CreatePlayer (0, EGryll.ACB);
 		LevelMgr.SpawnRectangularGrid (8, 8);
 		LevelMgr.LevelSetup ();
-		
-		GameView = EGameView.Game;
+
+		InputMgr.bAllowGameInput = true;
+
 		TimeSinceGameStart = 0;
 	}
 }

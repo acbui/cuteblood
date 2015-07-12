@@ -56,6 +56,8 @@ public class InputManager : MonoBehaviour {
 
 	public static InputManager ins;
 
+	public bool bAllowGameInput;
+
 	PlayerInputs PlayerOneInputs;
 	PlayerInputs PlayerTwoInputs;
 
@@ -71,6 +73,7 @@ public class InputManager : MonoBehaviour {
 		ins = this;
 		SetKeys (true, false);
 		SetKeys (false, false);
+		bAllowGameInput = false;
 	}
 
 	void Update()
@@ -95,21 +98,16 @@ public class InputManager : MonoBehaviour {
 
 	public void ReadGameInput()
 	{
-		if (GameManager.ins.GameView == EGameView.Menu)
-		{
-			if (Input.GetKeyDown (KeyCode.Space))
-			{
-				GameManager.ins.BeginGame();
+		if (GameManager.ins.GameView == EGameView.Menu) {
+			if (Input.GetKeyDown (KeyCode.Space)) {
+				GameManager.ins.BeginGame ();
 			}
-		}
-		else if (GameManager.ins.GameView == EGameView.End)
-		{
-			if (Input.GetKeyDown (KeyCode.Space))
-			{
+		} else if (GameManager.ins.GameView == EGameView.End) {
+			if (Input.GetKeyDown (KeyCode.Space)) {
 				GameManager.ins.OpenMenu ();
 			}
-		}
-		else 
+		} else if (bAllowGameInput)
+			;
 		{
 			for (int i = 0; i < PlayerOneInputs.Length(); i++)
 			{
