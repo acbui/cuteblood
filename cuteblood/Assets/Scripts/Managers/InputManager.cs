@@ -95,23 +95,40 @@ public class InputManager : MonoBehaviour {
 
 	public void ReadGameInput()
 	{
-		for (int i = 0; i < PlayerOneInputs.Length(); i++)
+		if (GameManager.ins.GameView == EGameView.Menu)
 		{
-			if (Input.GetKeyDown (PlayerOneKeyMoves[i]))
+			if (Input.GetKeyDown (KeyCode.Space))
 			{
-				if (PlayerManager.ins != null)
-				{
-					PlayerManager.ins.P1.GetComponent<Player>().InputRead (PlayerOneInputs.GetAction (i));
-				}
+				GameManager.ins.BeginGame();
 			}
-		
-			if (GameManager.ins.GameMode == EGameMode.MP)
+		}
+		else if (GameManager.ins.GameView == EGameView.End)
+		{
+			if (Input.GetKeyDown (KeyCode.Space))
 			{
-				if (Input.GetKeyDown (PlayerTwoKeyMoves[i]))
+				GameManager.ins.OpenMenu ();
+			}
+		}
+		else 
+		{
+			for (int i = 0; i < PlayerOneInputs.Length(); i++)
+			{
+				if (Input.GetKeyDown (PlayerOneKeyMoves[i]))
 				{
 					if (PlayerManager.ins != null)
 					{
-						PlayerManager.ins.P2.GetComponent<Player>().InputRead (PlayerTwoInputs.GetAction (i));
+						PlayerManager.ins.P1.GetComponent<Player>().InputRead (PlayerOneInputs.GetAction (i));
+					}
+				}
+			
+				if (GameManager.ins.GameMode == EGameMode.MP)
+				{
+					if (Input.GetKeyDown (PlayerTwoKeyMoves[i]))
+					{
+						if (PlayerManager.ins != null)
+						{
+							PlayerManager.ins.P2.GetComponent<Player>().InputRead (PlayerTwoInputs.GetAction (i));
+						}
 					}
 				}
 			}

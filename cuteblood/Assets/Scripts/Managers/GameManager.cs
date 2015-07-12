@@ -13,6 +13,9 @@ public class GameManager : MonoBehaviour {
 	public GameObject Players;
 
 	public EGameMode GameMode;
+	public EGameView GameView;
+
+	float TimeSinceGameStart;
 
 	void OnEnable()
 	{
@@ -20,13 +23,13 @@ public class GameManager : MonoBehaviour {
 		LevelMgr = gameObject.GetComponent<LevelManager> ();
 		PlayerMgr = gameObject.GetComponent<PlayerManager> ();
 		InputMgr = gameObject.GetComponent<InputManager> ();
+
+		GameView = EGameView.Menu;
 	}
 
 	void Start()
 	{
-		PlayerMgr.CreatePlayer (0, EGryll.ACB);
-		LevelMgr.SpawnRectangularGrid (8, 8);
-		LevelMgr.LevelSetup ();
+		//BeginGame ();
 	}
 
 	public void EndGame (EGryll Winner)
@@ -40,5 +43,21 @@ public class GameManager : MonoBehaviour {
 		case EGryll.BEARD:
 			break;
 		}
+
+		GameView = EGameView.End;
+	}
+
+	public void OpenMenu ()
+	{
+		GameView = EGameView.Menu;
+	}
+
+	public void BeginGame()
+	{
+		PlayerMgr.CreatePlayer (0, EGryll.ACB);
+		LevelMgr.SpawnRectangularGrid (8, 8);
+		LevelMgr.LevelSetup ();
+
+		GameView = EGameView.Game;
 	}
 }

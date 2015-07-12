@@ -49,6 +49,13 @@ namespace AssemblyCSharp
 		CW270
 	}
 
+	public enum EGameView
+	{
+		Menu,
+		Game,
+		End
+	}
+
 	public class HelperFunctions
 	{
 		public static EDirection GetDirection(int index)
@@ -67,5 +74,6 @@ namespace AssemblyCSharp
 			return EDirection.UP;
 		}
 	}
+
 }
 
