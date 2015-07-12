@@ -5,6 +5,7 @@ using AssemblyCSharp;
 public class GameManager : MonoBehaviour {
 
 	public static GameManager ins;
+	public GameObject ManagerPrefab;
 	LevelManager LevelMgr;
 	PlayerManager PlayerMgr;
 	InputManager InputMgr;
@@ -37,11 +38,8 @@ public class GameManager : MonoBehaviour {
 
 		GameView = EGameView.Menu;
 		bGameStarted = false;
-	}
-
-	void Start()
-	{
-		//BeginGame ();
+		MainCamera.clearFlags = CameraClearFlags.Nothing;
+		MainCamera.depth = 5;
 	}
 
 	void Update()
@@ -74,10 +72,12 @@ public class GameManager : MonoBehaviour {
 
 	public void OpenMenu ()
 	{
+		ResetGame ();
 		GameView = EGameView.Menu;
 		SpriteScreen.GetComponent<SpriteRenderer> ().sprite = StartScreen;
 		SpriteScreen.GetComponentInChildren<MeshRenderer> ().enabled = true;
 		bGameStarted = false;
+
 	}
 
 	public void BeginGame()
@@ -124,5 +124,11 @@ public class GameManager : MonoBehaviour {
 		InputMgr.bAllowGameInput = true;
 
 		TimeSinceGameStart = 0;
+	}
+
+	void ResetGame()
+	{
+		LevelMgr.Reset ();
+		PlayerMgr.Reset ();
 	}
 }

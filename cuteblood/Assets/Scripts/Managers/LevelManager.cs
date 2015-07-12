@@ -32,11 +32,16 @@ public class LevelManager : MonoBehaviour
 		SpriteRenderer renderer = TilePrefab.GetComponent<SpriteRenderer> ();
 		TileOffset = renderer.sprite.bounds.size.x;
 
+		Initialize ();
+	}
+
+	void Initialize()
+	{
 		PlayerRotations = new ERotation[2];
 		PlayerRotations[0] = GetRandomRotation ();
 		PlayerRotations[1] = GetRandomRotation ();
 	}
-	
+
 	public void SpawnRectangularGrid(int Length, int Height)
 	{
 		MapLength = Length;
@@ -206,6 +211,18 @@ public class LevelManager : MonoBehaviour
 			return ERotation.CW270;
 		}
 		return ERotation.CW0;
+	}
+
+	public void Reset()
+	{
+		foreach (Animator a in P1Map.GetComponentsInChildren<Animator>())
+		{
+			Destroy (a.gameObject);
+		}
+		foreach (Animator a in P2Map.GetComponentsInChildren<Animator>())
+		{
+			Destroy (a.gameObject);
+		}
 	}
 }
 

@@ -41,4 +41,12 @@ public class PlayerManager : MonoBehaviour {
 			Player2.Initialize (ID, SelectedGryll);
 		}
 	}
+
+	public void Reset()
+	{
+		Destroy (P1.GetComponentInChildren<Animator>().gameObject.transform.parent.gameObject);
+		Destroy (P2.GetComponentInChildren<Animator>().gameObject.transform.parent.gameObject);
+		Destroy (P1.GetComponentInChildren<Camera>().gameObject);
+		Destroy (P2.GetComponentInChildren<Camera>().gameObject);
+	}
 }
