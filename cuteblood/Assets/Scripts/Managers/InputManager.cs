@@ -57,6 +57,7 @@ public class InputManager : MonoBehaviour {
 	public static InputManager ins;
 
 	public bool bAllowGameInput;
+	bool MakeAIMove;
 
 	PlayerInputs PlayerOneInputs;
 	PlayerInputs PlayerTwoInputs;
@@ -102,6 +103,10 @@ public class InputManager : MonoBehaviour {
 			if (Input.GetKeyDown (KeyCode.Space)) {
 				GameManager.ins.BeginGame ();
 			}
+			if (Input.GetKeyDown (KeyCode.LeftShift) || Input.GetKeyDown (KeyCode.RightShift))
+			{
+				GameManager.ins.OpenSettings ();
+			}
 		} else if (GameManager.ins.GameView == EGameView.End) {
 			if (Input.GetKeyDown (KeyCode.Space)) {
 				GameManager.ins.OpenMenu ();
@@ -128,6 +133,9 @@ public class InputManager : MonoBehaviour {
 							PlayerManager.ins.P2.GetComponent<Player>().InputRead (PlayerTwoInputs.GetAction (i));
 						}
 					}
+				}
+				else 
+				{
 				}
 			}
 		}

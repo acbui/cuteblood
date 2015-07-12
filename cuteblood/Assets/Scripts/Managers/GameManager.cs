@@ -4,6 +4,12 @@ using AssemblyCSharp;
 
 public class GameManager : MonoBehaviour {
 
+	enum EditSettings
+	{
+		MODE,
+		DURATION
+	}
+
 	public static GameManager ins;
 	public GameObject ManagerPrefab;
 	LevelManager LevelMgr;
@@ -29,6 +35,16 @@ public class GameManager : MonoBehaviour {
 	public Sprite CharacterScreen;
 	public Sprite[] WinScreens;
 
+	public GameObject Start;
+	public GameObject Settings;
+	public GameObject ModeSetting;
+	public GameObject DurationSetting;
+	public SpriteRenderer RightTriangle;
+	public SpriteRenderer LeftTriangle; 
+
+	bool bInSettings;
+	EditSettings CurrentSetting;
+
 	void OnEnable()
 	{
 		ins = this;
@@ -44,6 +60,86 @@ public class GameManager : MonoBehaviour {
 
 	void Update()
 	{
+		if (bInSettings)
+		{
+			if (Input.GetKeyDown (KeyCode.DownArrow))
+			{
+				CurrentSetting = EditSettings.DURATION;
+				foreach (SpriteRenderer sr in ModeSetting.GetComponentsInChildren<SpriteRenderer>())
+				{
+					sr.enabled = false;
+				}
+				foreach (SpriteRenderer sr in DurationSetting.GetComponentsInChildren<SpriteRenderer>())
+				{
+					sr.enabled = true;
+					if (sr.gameObject.name.Contains ("right"))
+					{
+						RightTriangle = sr;
+					}
+					else 
+					{
+						LeftTriangle = sr;
+					}
+				}
+			}
+			else if (Input.GetKeyDown (KeyCode.UpArrow))
+			{
+				CurrentSetting = EditSettings.MODE;
+				foreach (SpriteRenderer sr in DurationSetting.GetComponentsInChildren<SpriteRenderer>())
+				{
+					sr.enabled = false;
+				}
+				foreach (SpriteRenderer sr in ModeSetting.GetComponentsInChildren<SpriteRenderer>())
+				{
+					if (sr.gameObject.name.Contains ("right"))
+					{
+						RightTriangle = sr;
+					}
+					else 
+					{
+						LeftTriangle = sr;
+					}
+					if (GameMode == EGameMode.MP)
+					{
+						RightTriangle.enabled = true;
+					}
+					else 
+					{
+						LeftTriangle.enabled = true;
+					}
+				}
+			}
+			else if (Input.GetKeyDown (KeyCode.RightArrow))
+			{
+				if (CurrentSetting == EditSettings.MODE)
+				{
+					ModeSetting.GetComponent<TextMesh>().text = "single player";
+					GameMode = EGameMode.SP;
+					RightTriangle.enabled = false;
+					LeftTriangle.enabled = true;
+				}
+				else 
+				{
+					GameDuration += 5;
+					DurationSetting.GetComponent<TextMesh>().text = GameDuration + " seconds";
+				}
+			}
+			else if (Input.GetKeyDown (KeyCode.LeftArrow))
+			{
+				if (CurrentSetting == EditSettings.MODE)
+				{
+					ModeSetting.GetComponent<TextMesh>().text = "multiplayer";
+					GameMode = EGameMode.MP;
+					RightTriangle.enabled = true;
+					LeftTriangle.enabled = false;
+				}
+				else 
+				{
+					GameDuration -= 5;
+					DurationSetting.GetComponent<TextMesh>().text = GameDuration + " seconds";
+				}
+			}
+		}
 		if (bGameStarted)
 		{
 			SpriteScreen.GetComponent<SpriteRenderer>().color = Color.Lerp (SpriteScreen.GetComponent<SpriteRenderer>().color, EndColor, FadeSpeed*Time.deltaTime);
@@ -75,9 +171,16 @@ public class GameManager : MonoBehaviour {
 		ResetGame ();
 		GameView = EGameView.Menu;
 		SpriteScreen.GetComponent<SpriteRenderer> ().sprite = StartScreen;
-		SpriteScreen.GetComponentInChildren<MeshRenderer> ().enabled = true;
-		bGameStarted = false;
 
+		bGameStarted = false;
+	}
+
+	public void OpenSettings()
+	{
+		Start.SetActive (false);
+		Settings.SetActive (true);
+		bInSettings = true;
+		CurrentSetting = EditSettings.MODE;
 	}
 
 	public void BeginGame()
@@ -85,7 +188,10 @@ public class GameManager : MonoBehaviour {
 		if (!bGameStarted)
 		{
 			GameView = EGameView.Game;
-			SpriteScreen.GetComponentInChildren<MeshRenderer> ().enabled = false;
+			foreach (MeshRenderer m in SpriteScreen.GetComponentsInChildren<MeshRenderer>())
+			{
+				m.enabled = false;
+			}
 			SpriteScreen.GetComponent<SpriteRenderer> ().sprite = CharacterScreen;
 			
 			StartColor = SpriteScreen.GetComponent<SpriteRenderer>().color;
